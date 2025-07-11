@@ -1,0 +1,42 @@
+name: Odoo Attendance Automation
+
+on:
+  schedule:
+    - cron: '50 4 * * 1-5'   # Check-in at 9:50 AM PKT (UTC+5)
+    - cron: '0 13 * * 1-5'   # Check-out at 6:00 PM PKT (UTC+5)
+
+jobs:
+  check_attendance:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          pip install selenium
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
+          sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
+
+      - name: Run Check-in Script
+        if: github.event.schedule == '50 4 * * 1-5'
+        env:
+          ODOO_EMAIL: ${{ secrets.ODOO_EMAIL }}
+          ODOO_PASSWORD: ${{ secrets.ODOO_PASSWORD }}
+        run: |
+          python auto_attendance.py checkin
+
+      - name: Run Check-out Script
+        if: github.event.schedule == '0 13 * * 1-5'
+        env:
+          ODOO_EMAIL: ${{ secrets.ODOO_EMAIL }}
+          ODOO_PASSWORD: ${{ secrets.ODOO_PASSWORD }}
+        run: |
+          python auto_attendance.py checkout
