@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '10 9 * * 1-5'   # 2:10 PM PKT (check-in)
-    - cron: '20 9 * * 1-5'   # 2:20 PM PKT (check-out)
+    - cron: '30 9 * * 1-5'   # 2:30 PM PKT (check-in)
+    - cron: '35 9 * * 1-5'   # 2:35 PM PKT (check-out)
   workflow_dispatch:        # Allow manual run for testing
 
 jobs:
