@@ -1,9 +1,11 @@
 name: Odoo Attendance Automation (Hardcoded Test)
 
 on:
+  push:
+    branches: [ main ]
   schedule:
-    - cron: '0 8 * * 1-5'   # 1:00 PM PKT (check-in)
-    - cron: '15 8 * * 1-5'  # 1:15 PM PKT (check-out)
+    - cron: '10 9 * * 1-5'   # 2:10 PM PKT (check-in)
+    - cron: '20 9 * * 1-5'   # 2:20 PM PKT (check-out)
   workflow_dispatch:        # Allow manual run for testing
 
 jobs:
@@ -32,9 +34,9 @@ jobs:
         run: |
           HOUR=$(date -u +'%H')
           MIN=$(date -u +'%M')
-          if [ "$HOUR" -eq 8 ] && [ "$MIN" -ge 0 ] && [ "$MIN" -le 2 ]; then
+          if [ "$HOUR" -eq 8 ] && [ "$MIN" -ge 0 ] && [ "$MIN" -le 12 ]; then
             echo "action=checkin" >> $GITHUB_OUTPUT
-          elif [ "$HOUR" -eq 8 ] && [ "$MIN" -ge 15 ] && [ "$MIN" -le 17 ]; then
+          elif [ "$HOUR" -eq 8 ] && [ "$MIN" -ge 15 ] && [ "$MIN" -le 22 ]; then
             echo "action=checkout" >> $GITHUB_OUTPUT
           else
             echo "action=skip" >> $GITHUB_OUTPUT
