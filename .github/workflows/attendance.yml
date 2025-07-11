@@ -39,6 +39,7 @@ jobs:
             echo "action=checkout" >> $GITHUB_OUTPUT
           else
             echo "action=skip" >> $GITHUB_OUTPUT
+          fi
 
       - name: Run Script
         if: steps.action_type.outputs.action != 'skip'
