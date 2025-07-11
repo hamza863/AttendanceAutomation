@@ -1,10 +1,10 @@
-name: Odoo Attendance Automation
+name: Odoo Attendance Automation (Hardcoded Test)
 
 on:
-  workflow_dispatch: 
   schedule:
-    - cron: '50 4 * * 1-5'   # Check-in at 9:50 AM PKT (UTC+5)
-    - cron: '0 13 * * 1-5'   # Check-out at 6:00 PM PKT (UTC+5)
+    - cron: '30 7 * * 1-5'   # Check-in at 12:30 PM PKT (UTC 07:30)
+    - cron: '40 7 * * 1-5'   # Check-out at 12:40 PM PKT (UTC 07:40)
+  workflow_dispatch:        # Allow manual run for testing
 
 jobs:
   check_attendance:
@@ -28,18 +28,24 @@ jobs:
             sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/bin/chromedriver
           fi
 
-      - name: Run Check-in Script
-        if: github.event.schedule == '50 4 * * 1-5'
-        env:
-          ODOO_EMAIL: ${{ secrets.ODOO_EMAIL }}
-          ODOO_PASSWORD: ${{ secrets.ODOO_PASSWORD }}
+      - name: Decide Action
+        id: action_type
         run: |
-          python auto_attendance.py checkin
+          HOUR=$(date -u +'%H')
+          MIN=$(date -u +'%M')
+          if [ "$HOUR" -eq 7 ] && [ "$MIN" -ge 30 ] && [ "$MIN" -le 32 ]; then
+            echo "action=checkin" >> $GITHUB_OUTPUT
+          elif [ "$HOUR" -eq 7 ] && [ "$MIN" -ge 40 ] && [ "$MIN" -le 42 ]; then
+            echo "action=checkout" >> $GITHUB_OUTPUT
+          else
+            echo "action=skip" >> $GITHUB_OUTPUT
 
-      - name: Run Check-out Script
-        if: github.event.schedule == '0 13 * * 1-5'
+      - name: Run Script
+        if: steps.action_type.outputs.action != 'skip'
         env:
-          ODOO_EMAIL: ${{ secrets.ODOO_EMAIL }}
-          ODOO_PASSWORD: ${{ secrets.ODOO_PASSWORD }}
+          ODOO_EMAIL: harrymax042@gmail.com
+          ODOO_PASSWORD: Dev.hamza45@
         run: |
-          python auto_attendance.py checkout
+          echo "⏳ Random delay before action..."
+          python3 -c "import random, time; delay=random.randint(0, 120); print(f'Delaying {delay} seconds...'); time.sleep(delay)"
+          python auto_attendance.py ${{ steps.action_type.outputs.action }}
