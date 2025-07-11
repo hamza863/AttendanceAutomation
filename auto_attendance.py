@@ -7,8 +7,8 @@ from selenium.webdriver.chrome.options import Options
 import sys
 
 # ==== CONFIGURATION ====
-LOGIN_URL = "https://hrm.syntracx.com/web/login?redirect=%2Fodoo%3F"
-ATTENDANCE_URL = "https://hrm.syntracx.com/odoo/attendances"
+LOGIN_URL = "https://hamza20.odoo.com/web/login?redirect=%2Fodoo%3F"
+ATTENDANCE_URL = "https://hamza20.odoo.com/odoo/attendances"
 
 EMAIL = os.getenv("ODOO_EMAIL")
 PASSWORD = os.getenv("ODOO_PASSWORD")
