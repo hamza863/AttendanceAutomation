@@ -14,7 +14,7 @@ EMAIL = os.getenv("ODOO_EMAIL")
 PASSWORD = os.getenv("ODOO_PASSWORD")
 ACTION = sys.argv[1] if len(sys.argv) > 1 else "auto"  # "checkin", "checkout", or "auto"
 
-def random_delay(minutes=10):
+def random_delay(minutes=2):
     delay = random.randint(0, minutes * 60)
     print(f"⏳ Waiting {delay // 60} min {delay % 60} sec before {ACTION}...")
     time.sleep(delay)
@@ -29,7 +29,7 @@ chrome_options.add_argument("--window-size=1920,1080")
 driver = webdriver.Chrome(options=chrome_options)
 
 try:
-    random_delay(10)  # Random delay within 10 minutes
+    random_delay(2)  # Random delay within 10 minutes
 
     # 1. Open Login Page
     driver.get(LOGIN_URL)
