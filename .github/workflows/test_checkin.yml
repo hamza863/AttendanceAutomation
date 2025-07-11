@@ -1,0 +1,32 @@
+name: Manual Test Checkin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_checkin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Chrome
+        run: |
+          pip install selenium
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg2
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+
+      - name: Force Manual Checkin
+        env:
+          ODOO_EMAIL: harrymax042@gmail.com
+          ODOO_PASSWORD: Dev.hamza45@
+        run: |
+          python3 auto_attendance.py checkin
