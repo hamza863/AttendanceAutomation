@@ -16,17 +16,20 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install Chrome
+      - name: Install Chrome & ChromeDriver
         run: |
-          pip install selenium
           sudo apt-get update
-          sudo apt-get install -y wget gnupg2
+          sudo apt-get install -y wget gnupg2 unzip
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt install -y ./google-chrome-stable_current_amd64.deb
 
-      - name: Force Manual Checkin
-        env:
-          ODOO_EMAIL: harrymax042@gmail.com
-          ODOO_PASSWORD: Dev.hamza45@
+      - name: Install Python dependencies
         run: |
-          python3 auto_attendance.py checkin
+          pip install selenium webdriver-manager
+
+      - name: Run Check-in Script
+        env:
+          ODOO_EMAIL: ${{ secrets.ODOO_EMAIL }}
+          ODOO_PASSWORD: ${{ secrets.ODOO_PASSWORD }}
+        run: |
+          python3 test_attendance.py
